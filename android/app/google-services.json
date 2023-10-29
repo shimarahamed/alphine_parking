@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "517512843140",
+    "project_id": "alphine-parking",
+    "storage_bucket": "alphine-parking.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:517512843140:android:2798f595cb3a9fb983d7d1",
+        "android_client_info": {
+          "package_name": "com.example.alphine_parking"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "517512843140-n5q05t0anb5rfda41o7kr6it72vgr3sv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDjsI4UKmFdgcxUlbxsb14zgjxfYlsnrmU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "517512843140-n5q05t0anb5rfda41o7kr6it72vgr3sv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
