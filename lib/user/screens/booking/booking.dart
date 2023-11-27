@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'navbar.dart';
+import '../../widgets/navbar.dart';
 import 'booknow.dart';
 
 class BookingScreen extends StatelessWidget {
@@ -17,6 +17,7 @@ class BookingScreen extends StatelessWidget {
     final List<dynamic> facilities = spot['facilities'] ?? [];
     final String ownerName = spot['ownerName'] ?? '';
     final double price = spot['price'] ?? 0.0;
+    final String status = spot['status']??'';
 
     return Scaffold(
       body: Column(
@@ -26,10 +27,7 @@ class BookingScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  // Image at the top
                   Image.network(ImageURL, height: 200, fit: BoxFit.cover),
-
-                  // Parking spot name
                   Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: Text(
@@ -98,7 +96,6 @@ class BookingScreen extends StatelessWidget {
                             ),
                             const SizedBox(height: 8),
                             Text('💲 Hourly Rate: Rs. $price'),
-                            // You can add more pricing details.
                           ],
                         ),
                       ),
@@ -128,7 +125,6 @@ class BookingScreen extends StatelessWidget {
                         Text('📱 Mobile Wallet'),
                         Text('💳 Credit Card'),
                         Text('💵 Cash Payment'),
-                        // Add more payment methods as needed.
                       ],
                     ),
                   ),
@@ -145,7 +141,6 @@ class BookingScreen extends StatelessWidget {
                         ),
                         SizedBox(height: 8),
                         // User reviews can be displayed here.
-                        // You can use ListTile or other widgets to format reviews.
                       ],
                     ),
                   ),
@@ -159,15 +154,16 @@ class BookingScreen extends StatelessWidget {
             child: ElevatedButton(
               onPressed: () {
                 Navigator.pushNamed(
-      context,
-      '/booknow',
-      arguments: {
-        'spot': spot,
-        'name': name,
-        'price': price,
-        'ParkingSpotID': ParkingSpotID,
-      },
-    );
+                  context,
+                  '/booknow',
+                  arguments: {
+                    'spot': spot,
+                    'name': name,
+                    'price': price,
+                    'ParkingSpotID': ParkingSpotID,
+                    'status': status,
+                  },
+                );
               },
               style: ElevatedButton.styleFrom(
                 primary: const Color.fromARGB(255, 116, 82, 255),

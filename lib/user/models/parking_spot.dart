@@ -8,6 +8,8 @@ class ParkingSpot {
   final String ownerName;
   final double rating;
   final List<String> facilities;
+  final double latitude;
+  final double longitude;
 
   
 
@@ -21,7 +23,12 @@ class ParkingSpot {
     required this.ownerName,
     required this.rating,
     required this.facilities,
+    required this.latitude, 
+    required this.longitude, 
+    
   });
+
+  get id => null;
   
 Map<String, dynamic> toMap() {
     return {
@@ -34,21 +41,25 @@ Map<String, dynamic> toMap() {
       'ownerName': ownerName,
       'rating': rating,
       'facilities': facilities,
+      'latitude':latitude,
+      'longitude':longitude,
     };
   }
 
-  // Add a method to toggle availability.
+
   ParkingSpot toggleAvailability() {
     return ParkingSpot(
       ParkingSpotID: ParkingSpotID,
       name: name,
       address: address,
       price: price,
-      available: !available, // Toggle availability.
+      available: !available, 
       ImageURL: ImageURL,
       ownerName: ownerName,
       rating: rating,
       facilities: facilities,
+      latitude: latitude,
+      longitude: longitude,
     );
   }
 

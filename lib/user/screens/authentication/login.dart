@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'signup.dart';
-import '../widgets/background.dart';
+import '../../widgets/background.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -15,40 +15,53 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _passwordController = TextEditingController();
 
   bool _showError = false; 
+   bool _loading = false;
+  
 
   Future<void> _login() async {
+    setState(() {
+      _loading = true;
+    });
     try {
       String email = _emailController.text.trim();
       String password = _passwordController.text.trim();
 
       if (email.isEmpty || password.isEmpty) {
-       
+       await Future.delayed(Duration(seconds: 2));
+
        setState(() {
-          _showError = false; 
+        _showError = false; 
            });
         return;
       }
+      
 
+      //check details in firestore firebase
       UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
 
       if (userCredential.user != null) {
-        
+        setState(() {
+        _showError = true;
+      });
+
          Navigator.pushReplacementNamed(context, '/home'); 
-         } else {
+         } 
+         else {
         
         setState(() {
           _showError = false; 
           });
       }
-    } catch (e) {
+    } 
+    catch (e) {
       
       print('Login failed: $e');
       
       setState(() {
-        _showError = true; 
+        _showError = false; 
         });
     }
   }
@@ -107,6 +120,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 prefixIcon: Icons.lock,
               ),
               const SizedBox(height: 30),
+              if (_loading) LinearProgressIndicator(),
+              const SizedBox(height:20),
               ElevatedButton(
                 onPressed: () {
                   setState(() {

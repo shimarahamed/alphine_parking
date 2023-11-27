@@ -1,7 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:alphine_parking/admin/screens/dashboard.dart'; // Import your admin screens
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'screens/login.dart';
+import 'screens/admindashboard.dart'; 
+import 'screens/booking_history.dart';
+import 'screens/add_user.dart';
+import 'screens/manage_users.dart';
+import 'screens/manage_owners.dart';
+import 'screens/add_owner.dart';
+import 'screens/manage_parkings.dart';
+import 'screens/add_parking.dart';
 
-void main() {
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(AdminApp());
 }
 
@@ -24,11 +36,17 @@ class AdminApp extends StatelessWidget {
           ),
       ),
        ),
-      initialRoute: '/dashboard', // Define the initial route
+      initialRoute: '/login', 
       routes: {
-        '/dashboard': (context) => DashboardScreen(),
-        
-        // Define routes for other admin screens
+        '/login': (context) => const AdminLoginScreen(),
+        '/dashboard': (context) => const AdminDashboardScreen(),
+        '/manage_booking': (context) => BookingHistoryScreen(),
+        '/manage_users': (context) => UserManagementScreen(),
+        '/adduser': (context) => AddUserScreen(),
+        '/manage_owners': (context) => OwnerManagementScreen(),
+        '/addowner': (context) => AddOwnerScreen(),
+        '/manage_parkings': (context) => ManageParkingSpotScreen(),
+        '/addparking': (context) => AddParkingSpotScreen(),
       },
     );
   }

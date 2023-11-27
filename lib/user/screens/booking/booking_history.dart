@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:alphine_parking/user/services/data_repository.dart';
 import 'package:alphine_parking/user/models/booking.dart';
-import 'navbar.dart';
+import '../../widgets/navbar.dart';
 import 'booking_ticket.dart';
 
 class BookingHistoryScreen extends StatefulWidget {

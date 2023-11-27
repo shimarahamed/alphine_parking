@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'navbar.dart';
+import '../widgets/navbar.dart';
 
 class NotificationPage extends StatelessWidget {
   @override
@@ -7,10 +7,10 @@ class NotificationPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Notifications'),
-        backgroundColor: Colors.white // Change the app bar color
+        backgroundColor: Colors.white 
       ),
       body: NotificationList(),
-      bottomNavigationBar: BottomNavigation(selectedIndex: 3), // Add the BottomNavigation widget
+      bottomNavigationBar: BottomNavigation(selectedIndex: 3), 
     );
   }
 }
@@ -19,13 +19,13 @@ class NotificationList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-      itemCount: 5, // Replace with the actual number of notifications
+      itemCount: 5, 
       itemBuilder: (context, index) {
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           child: NotificationItem(
-            title: 'Notification Title $index',
-            message: 'This is the content of notification $index. You can customize it as needed.',
+            title: 'Notification $index',
+            message: 'This is the content of notification $index. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ',
           ),
         );
       },
@@ -43,12 +43,12 @@ class NotificationItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20.0), // Rounded edges with more radius
+        borderRadius: BorderRadius.circular(20.0),
       ),
       elevation: 2,
       margin: const EdgeInsets.all(0),
       child: ListTile(
-        contentPadding: const EdgeInsets.all(16), // Increased content padding
+        contentPadding: const EdgeInsets.all(16), 
         title: Text(
           title,
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),

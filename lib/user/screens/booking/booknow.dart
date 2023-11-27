@@ -10,12 +10,14 @@ class BookNowScreen extends StatefulWidget {
   final String name;
   final double price;
   final String ParkingSpotID;
+  final String status;
 
   BookNowScreen({
     required this.spot,
     required this.name,
     required this.price,
     required this.ParkingSpotID,
+    required this.status,
   });
 
   @override
@@ -31,6 +33,8 @@ class _BookNowScreenState extends State<BookNowScreen> {
   int? duration;
   String? paymentMethod;
   String? ParkingSpot;
+  String? status;
+  
 
   double totalPrice(double price, int? duration) {
     if (duration == null) return 0;
@@ -62,6 +66,7 @@ class _BookNowScreenState extends State<BookNowScreen> {
     }
   }
 
+//to save the booking in firestore
   void saveBookingToFirestore() async {
     User? user = FirebaseAuth.instance.currentUser;
 
@@ -70,15 +75,19 @@ class _BookNowScreenState extends State<BookNowScreen> {
         duration != null &&
         paymentMethod != null &&
         ParkingSpot != null) {
+
+          await user?.reload();
+          user = FirebaseAuth.instance.currentUser;
+
       if (paymentMethod == 'Card') {
         final Map<String, dynamic> paymentData = {
           "sandbox": true, // Set to true for sandbox mode, false for production
           "merchant_id": "1224586", // Replace with your merchant ID
-          "merchant_secret": "MTg5NTYyNTYwOTM1NDA5NDM2NDU0MDQzODg4MzE0MjAxMTA1Mzg=", // Replace with your merchant secret
+          "merchant_secret": "MTg5NTYyNTYwOTM1NDA5NDM2NDU0MDQzODg4MzE0MjAxMTA1Mzg=", 
           "notify_url": "com.example.alphine_parking",
           "order_id": "ItemNo12345",
           "items": "Hello from Flutter!",
-          "amount": totalPrice(widget.price, duration), // Use the total price from your booking
+          "amount": totalPrice(widget.price, duration), 
           "currency": "LKR",
           "first_name": "Saman",
           "last_name": "Perera",
@@ -124,6 +133,9 @@ class _BookNowScreenState extends State<BookNowScreen> {
           'bookingDateTime': bookingDateTime,
           'name': widget.name,
           'price': widget.price,
+          'status': widget.status,
+          'userName': user.displayName,
+          'userPhone': user.phoneNumber,
         };
 
         await bookingsCollection.add(bookingData);
@@ -178,6 +190,34 @@ class _BookNowScreenState extends State<BookNowScreen> {
     );
   }
 
+  Widget buildSpotButton(String title, dynamic selectedValue, Function(dynamic) onSelect, String price, bool available) {
+    bool isSelected = selectedValue == title;
+
+    return OutlinedButton(
+      style: ButtonStyle(
+        side: MaterialStateProperty.all(
+          BorderSide(
+            color: isSelected ? Color.fromARGB(255, 3, 205, 255) : Color.fromARGB(255, 225, 225, 225),
+            width: 1.5,
+          ),
+        ),
+        shape: MaterialStateProperty.all(RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        )),
+        backgroundColor: MaterialStateProperty.all(isSelected ? Color.fromARGB(255, 3, 205, 255) : Color.fromARGB(255, 247, 247, 247)),
+        padding: MaterialStateProperty.all(const EdgeInsets.symmetric(horizontal: 10, vertical: 12)),
+      ),
+      onPressed: available ? () => setState(() => onSelect(title)) : null,
+    child: Column(
+      children: [
+        Text(title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15, color: Colors.black)),
+        const SizedBox(height: 5),
+        Text(price, style: TextStyle(color: Color.fromARGB(255, 98, 98, 98))),
+      ],
+    ),
+  );
+}
+
   Widget buildDurationButton(String title, dynamic selectedValue, Function(int) onSelect, String price) {
     bool isSelected = selectedValue == title;
     int durationValue = int.parse(title.split(' ')[0]);
@@ -207,6 +247,7 @@ class _BookNowScreenState extends State<BookNowScreen> {
       ),
     );
   }
+
 
   Widget buildTimePickerButton(BuildContext context) {
     return OutlinedButton(
@@ -345,10 +386,10 @@ class _BookNowScreenState extends State<BookNowScreen> {
                       mainAxisSpacing: 10,
                       crossAxisSpacing: 10,
                       children: [
-                        buildDurationButton('1 hour', duration, (value) => duration = value, 'Price: \$10'),
-                        buildDurationButton('2 hours', duration, (value) => duration = value, 'Price: \$18'),
-                        buildDurationButton('3 hours', duration, (value) => duration = value, 'Price: \$24'),
-                        buildDurationButton('4 hours', duration, (value) => duration = value, 'Price: \$30'),
+                        buildDurationButton('1 hour', duration, (value) => duration = value, 'Rs. ${total.toStringAsFixed(0)}'),
+                        buildDurationButton('2 hours', duration, (value) => duration = value, 'Rs. 300'),
+                        buildDurationButton('3 hours', duration, (value) => duration = value, 'Rs. 450'),
+                        buildDurationButton('4 hours', duration, (value) => duration = value, 'Rs. 600'),
                       ],
                     ),
                     const SizedBox(height: 30),
@@ -369,21 +410,25 @@ class _BookNowScreenState extends State<BookNowScreen> {
                     const Text('Select Parking Spot', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Colors.black)),
                     const SizedBox(height: 15),
                     GridView.count(
-                      crossAxisCount: 4,
-                      childAspectRatio: 1.3,
+                      crossAxisCount: 5,
+                      childAspectRatio: 1,
                       shrinkWrap: true,
                       mainAxisSpacing: 10,
                       crossAxisSpacing: 10,
-                      children: [
-                        for (var i = 1; i <= 12; i++)
-                          buildOptionButton(
-                            'Spot ${i.toString().padLeft(2, '0')}',
-                            ParkingSpot,
-                            (value) => ParkingSpot = value,
-                            '🅿️',
-                          ),
-                      ],
-                    ),
+                      children: List.generate(15, (index) {
+                      bool isAvailable = index + 1 != 3 && index + 1 != 7 && index + 1 != 11;
+
+                      return buildSpotButton(
+                        '1A ${(index + 1).toString().padLeft(2, '0')}',
+                        ParkingSpot,
+                        (value) => ParkingSpot = value,
+                        '🅿️',
+                        isAvailable,
+                      );
+                    }),
+
+),
+
                   ],
                 ),
               ),

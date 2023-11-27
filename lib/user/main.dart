@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'screens/login.dart';
-import 'screens/signup.dart';
+import 'screens/authentication/login.dart';
+import 'screens/authentication/signup.dart';
 import 'screens/splash.dart';
-import 'screens/user_profile.dart';
+import 'screens/profile/user_profile.dart';
 import 'screens/home.dart';
-import 'screens/forgot_password.dart';
-import 'screens/booknow.dart';
-import 'screens/booking.dart';
-import 'screens/booking_confirmation.dart';
-import 'screens/booking_history.dart';
+import 'screens/authentication/forgot_password.dart';
+import 'screens/booking/booknow.dart';
+import 'screens/booking/booking.dart';
+import 'screens/booking/booking_confirmation.dart';
+import 'screens/booking/booking_history.dart';
 import 'screens/notification.dart';
 //import 'services/fcmhandler.dart';
 import 'screens/search.dart';
-import 'screens/booking_ticket.dart';
+import 'screens/booking/booking_ticket.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -62,6 +62,7 @@ class MyApp extends StatelessWidget {
             name: args['name'],
             price: args['price'],
             ParkingSpotID: args['ParkingSpotID'],
+            status: args['status'],
       );},
         '/profile' : (context) => const UserProfilePage(),
         '/confirmation' : (context) => BookingConfirmationScreen(bookingData: {}),
@@ -129,7 +130,7 @@ class HomePage extends StatelessWidget {
                       Navigator.pushNamed(context, '/login');
                     },
                     style: ElevatedButton.styleFrom(
-                      primary: const Color.fromARGB(255, 160, 72, 219),
+                      primary: const Color.fromARGB(255, 116, 82, 255),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(15),
                       ),

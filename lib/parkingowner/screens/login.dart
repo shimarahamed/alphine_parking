@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'signup.dart';
 import 'background.dart';
 
@@ -23,10 +24,24 @@ class _OwnerLoginScreenState extends State<OwnerLoginScreen> {
 
       if (email.isEmpty || password.isEmpty) {
         setState(() {
-          _showError = true;
+          _showError = false;
         });
         return;
       }
+
+      // Check if the email exists in theOwner collection in Firestore.
+      QuerySnapshot owners = await FirebaseFirestore.instance
+        .collection("Owners")
+        .where("email", isEqualTo: email)
+        .get();
+
+    if (owners.docs.isEmpty) {
+      setState(() {
+        _showError = true;
+      });
+      return;
+    }
+
 
       UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: email,
@@ -35,7 +50,8 @@ class _OwnerLoginScreenState extends State<OwnerLoginScreen> {
 
       if (userCredential.user != null) {
         Navigator.pushReplacementNamed(context, '/ownerdashboard');
-      } else {
+      } 
+      else {
         setState(() {
           _showError = true;
         });
@@ -60,7 +76,7 @@ class _OwnerLoginScreenState extends State<OwnerLoginScreen> {
             children: [
               InkWell(
                 onTap: () {
-                  // Handle logo tap if needed.
+
                 },
                 child: Container(
                   decoration: BoxDecoration(
@@ -75,13 +91,22 @@ class _OwnerLoginScreenState extends State<OwnerLoginScreen> {
                   ),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(20),
-                    child: Image.asset('assets/logo.png'), // Replace with your owner's logo.
+                    child: Image.asset('assets/logo_name_white.png'), 
                   ),
                 ),
               ),
               const SizedBox(height: 50),
               const Text(
-                "Login to your owner account",
+                "Parking Owner App",
+                style: TextStyle(
+                  color: Color.fromARGB(255, 0, 126, 253),
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 20),
+              const Text(
+                "Login to your parking spot owner account",
                 style: TextStyle(
                   color: Color.fromARGB(255, 100, 100, 100),
                   fontSize: 16.0,
@@ -111,7 +136,7 @@ class _OwnerLoginScreenState extends State<OwnerLoginScreen> {
                 },
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(horizontal: 40.0),
-                  backgroundColor: const Color(0xFF2196F3),
+                  backgroundColor: Color.fromARGB(255, 116, 82, 255),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10.0),
                   ),
@@ -130,7 +155,7 @@ class _OwnerLoginScreenState extends State<OwnerLoginScreen> {
                 const SizedBox(height: 10),
                 const Text(
                   'Invalid email or password.',
-                  style: TextStyle(color: Colors.red),
+                  style: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
                 ),
               const SizedBox(height: 30),
               TextButton(
@@ -151,7 +176,7 @@ class _OwnerLoginScreenState extends State<OwnerLoginScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const Text(
-                    "Don't have an owner account? ",
+                    "Don't have an account? ",
                     style: TextStyle(
                       color: Color.fromARGB(255, 100, 100, 100),
                       fontSize: 16.0,

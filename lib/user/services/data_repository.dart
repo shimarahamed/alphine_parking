@@ -12,6 +12,7 @@ class DataRepository {
   final CollectionReference usersCollection =
       FirebaseFirestore.instance.collection('UserID');
 
+
   Future<List<ParkingSpot>> getParkingSpots() async {
     QuerySnapshot querySnapshot = await parkingSpotsCollection.get();
     List<ParkingSpot> ParkingSpots = querySnapshot.docs
@@ -21,10 +22,12 @@ class DataRepository {
               address: doc['address'],
               price: doc['price'].toDouble(),
               available: doc['available'],
-              ImageURL: doc['ImageURL'],
+              ImageURL: doc['ImageURL'] ?? 'N/A',
               ownerName: doc['ownerName'],
-              rating: doc['rating'].toDouble(),
+              rating: doc['rating'].toDouble() ?? 'N/A',
               facilities: List<String>.from(doc['facilities']),
+              latitude: (doc['latitude'] as num?)?.toDouble() ?? 0.0,
+              longitude: (doc['longitude'] as num?)?.toDouble() ?? 0.0,
             ))
         .toList();
 
@@ -46,6 +49,8 @@ class DataRepository {
               paymentMethod: doc['paymentMethod'],
               name: doc['name'],
               ParkingSpot: doc['ParkingSpot'] ?? 'N/A',
+              // userName: doc['userName']?? 'N/A',
+              // userPhone: doc['userName']?? 'N/A',
             ))
         .toList();
 

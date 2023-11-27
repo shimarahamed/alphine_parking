@@ -10,6 +10,9 @@ class Booking {
   final String paymentMethod;
   final String name;
   final String ParkingSpot;
+  // final String userName;
+  // final String userPhone;
+
 
   Booking({
     required this.ParkingSpotID,
@@ -23,5 +26,7 @@ class Booking {
     required this.paymentMethod,
     required this.name,
     required this.ParkingSpot,
+    // required this.userName,
+    // required this.userPhone,
   });
 }

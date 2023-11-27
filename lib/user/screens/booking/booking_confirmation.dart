@@ -15,11 +15,11 @@ class BookingConfirmationScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           const Icon(
-            Icons.check_circle, // You can use any desired icon
-            color: Colors.green, // Icon color
-            size: 100, // Icon size
+            Icons.check_circle, 
+            color: Colors.green, 
+            size: 100, 
           ),
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           const Text(
             'Booking has been confirmed',
             style: TextStyle(
@@ -27,7 +27,7 @@ class BookingConfirmationScreen extends StatelessWidget {
               fontWeight: FontWeight.bold,
             ),
           ),
-          SizedBox(height: 30),
+          const SizedBox(height: 30),
           Center(
             child: ElevatedButton(
               onPressed: () {
@@ -39,16 +39,16 @@ class BookingConfirmationScreen extends StatelessWidget {
                 );
               },
               style: ElevatedButton.styleFrom(
-                primary: const Color.fromARGB(255, 116, 82, 255), // Button color
+                primary: const Color.fromARGB(255, 116, 82, 255), 
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12), // Button border radius
+                  borderRadius: BorderRadius.circular(12), 
                 ),
-                minimumSize: const Size(200, 50), // Button size
+                minimumSize: const Size(200, 50), 
               ),
-              child: Text(
+              child: const Text(
                 'Show Ticket',
                 style: TextStyle(
-                  color: Colors.white, // Button text color
+                  color: Colors.white, 
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                 ),

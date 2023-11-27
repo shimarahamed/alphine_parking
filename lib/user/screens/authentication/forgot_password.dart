@@ -18,7 +18,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
       if (email.isEmpty) {
         return; 
       }
-
+    //sent a template meail for password reset
       await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
 
       setState(() {

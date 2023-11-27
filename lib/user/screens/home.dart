@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'login.dart';
+import 'authentication/login.dart';
 import 'parking_options.dart';
-import 'navbar.dart';
-import 'booking.dart';
+import '../widgets/navbar.dart';
+import 'booking/booking.dart';
 import 'package:alphine_parking/user/services/data_repository.dart';
 import 'package:alphine_parking/user/models/parking_spot.dart';
 
@@ -30,12 +30,11 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
-    // Fetch parking spot data from Firestore when the widget initializes
     _fetchParkingSpots();
   }
 
+  //to fetch parkingspot details from
   Future<void> _fetchParkingSpots() async {
-    // Use the repository method to fetch parking spots
     final List<ParkingSpot> fetchedParkingSpots = await _dataRepository.getParkingSpots();
     setState(() {
       ParkingSpots = fetchedParkingSpots;
@@ -214,7 +213,7 @@ class _HomeState extends State<Home> {
                             _VehicleTypeCard(imageUrl: 'assets/threewheel.png', title: 'Tuk'),
                             _VehicleTypeCard(imageUrl: 'assets/car.png', title: 'Car'),
                             _VehicleTypeCard(imageUrl: 'assets/van.png', title: 'Van'),
-                            _VehicleTypeCard(imageUrl: 'assets/van.png', title: 'Truck'),
+                            _VehicleTypeCard(imageUrl: 'assets/truck.png', title: 'Truck'),
                           ],
                         ),
                       ),

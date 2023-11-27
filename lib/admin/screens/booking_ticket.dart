@@ -53,44 +53,7 @@ class TicketDetailsScreen extends StatelessWidget {
             ],
           ),
           SizedBox(height: 60),
-          Center(
-            child: ElevatedButton(
-              onPressed: () {
-                
-              },
-              style: ElevatedButton.styleFrom(
-                primary: const Color.fromARGB(255, 116, 82, 255), 
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                minimumSize: const Size(200, 50), 
-              ),
-              child: Text(
-                'Navigate',
-                style: TextStyle(
-                  color: Colors.white, 
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-          ),
-          SizedBox(height: 10),
-          Center(
-            child: TextButton(
-              onPressed: () {
-                Navigator.pushNamed(context, '/home');
-              },
-              child: const Text(
-                "Return to Home",
-                style: TextStyle(
-                  color: Colors.blue,
-                  fontSize: 16.0,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-          )
+          
         ],
       ),
     );

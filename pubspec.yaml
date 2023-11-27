@@ -43,7 +43,14 @@ dependencies:
   qr_flutter: ^4.1.0
   google_maps_flutter: ^2.5.0
   payhere_mobilesdk_flutter: ^3.0.1
-  
+  image_picker: ^1.0.4
+  firebase_storage: ^11.4.1
+  mockito: ^5.4.2
+  fl_chart: ^0.40.0
+  font_awesome_flutter: ^10.0.0
+  barcode_scan2: ^4.3.0
+  permission_handler: ^10.0.0
+  page_view_indicators: ^2.0.0
 
 dev_dependencies:
   flutter_test:
@@ -72,6 +79,7 @@ flutter:
     - assets/threewheel.png
     - assets/car.png
     - assets/van.png
+    - assets/truck.png
     - assets/car_get_started.png
     - assets/logo.png
     - assets/logo_name.png
@@ -83,6 +91,7 @@ flutter:
     - assets/promo1.png
     - assets/promo2.png
     - assets/promo3.png
+    - assets/user.png
 
 
   # The following line ensures that the Material Icons font is

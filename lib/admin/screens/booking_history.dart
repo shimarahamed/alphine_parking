@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:alphine_parking/user/services/data_repository.dart';
-import 'package:alphine_parking/user/models/booking.dart';
-
+import 'package:alphine_parking/admin/services/data_repository.dart';
+import 'package:alphine_parking/admin/models/booking.dart';
+import 'booking_ticket.dart';
+import '../widgets/navbar.dart';
 
 class BookingHistoryScreen extends StatefulWidget {
-  final String userID;
-
-  BookingHistoryScreen({required this.userID});
-
   @override
   _BookingHistoryScreenState createState() => _BookingHistoryScreenState();
 }
@@ -18,9 +15,9 @@ class _BookingHistoryScreenState extends State<BookingHistoryScreen> {
   @override
   void initState() {
     super.initState();
-    DataRepository().getBookings().then((userBookings) {
+    DataRepository().getBookings().then((allBookings) {
       setState(() {
-        bookings = userBookings.where((booking) => booking.userID == widget.userID).toList();
+        bookings = allBookings;
       });
     });
   }
@@ -28,7 +25,7 @@ class _BookingHistoryScreenState extends State<BookingHistoryScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Booking History')),
+      appBar: AppBar(title: const Text('Booking History')),
       body: ListView.builder(
         itemCount: bookings.length,
         itemBuilder: (context, index) {
@@ -44,46 +41,69 @@ class _BookingHistoryScreenState extends State<BookingHistoryScreen> {
             status = 'Completed';
           }
 
-          return Card(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20.0),
-            ),
-            elevation: 10,
-            shadowColor: Colors.grey.withOpacity(0.5),
-            margin: const EdgeInsets.symmetric(vertical: 8),
-            child: Padding(
-              padding: const EdgeInsets.all(15),
-              child: Row(
-                children: [
-                  Container(
-                    width: 125,
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(15.0),
-                    ),
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => TicketDetailsScreen(bookingData: {
+                      'name': booking.name,
+                      'ParkingSpot': booking.ParkingSpot,
+                      'VehicleType': booking.VehicleType,
+                      'VehicleNumber': booking.VehicleNumber,
+                      'duration': booking.duration.toString(),
+                      'paymentMethod': booking.paymentMethod,
+                    }),
                   ),
-                  Expanded(
-                    child: Container(
-                      padding: const EdgeInsets.all(10),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                );
+              },
+              child: Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20.0),
+                ),
+                elevation: 5,
+                shadowColor: Color.fromARGB(255, 116, 82, 255).withOpacity(0.4),
+                margin: const EdgeInsets.symmetric(vertical: 8),
+                child: Padding(
+                  padding: const EdgeInsets.all(15),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            'Parking Spot: ${booking.ParkingSpotID}',
+                            booking.name,
                             style: const TextStyle(
                               color: Colors.black,
                               fontWeight: FontWeight.bold,
-                              fontSize: 16,
+                              fontSize: 17,
                             ),
                           ),
-                          const SizedBox(height: 6),
+                          Icon(Icons.arrow_forward, color: Colors.black),
+                        ],
+                      ),
+                      const SizedBox(height: 10),
+                      Text(
+                        'Date & Time: ${booking.bookingDateTime.toLocal()}',
+                        style: const TextStyle(
+                          color: Color.fromARGB(255, 125, 125, 125),
+                          fontSize: 14,
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
                           Text(
-                            'Date & Time: ${booking.bookingDateTime}',
+                            'Duration: ${booking.duration} hours',
                             style: const TextStyle(
-                              color: Color.fromARGB(255, 125, 125, 125),
+                              color: Colors.black,
                               fontSize: 14,
                             ),
                           ),
-                          const SizedBox(height: 15),
                           Text(
                             'Status: $status',
                             style: const TextStyle(
@@ -91,44 +111,59 @@ class _BookingHistoryScreenState extends State<BookingHistoryScreen> {
                               fontSize: 14,
                             ),
                           ),
-                          const SizedBox(height: 15),
-                          Row(
-                            children: [
-                              Text(
-                                'Vehicle: ${booking.VehicleType}',
-                                style: const TextStyle(
-                                  color: Color.fromARGB(255, 252, 162, 26),
-                                  fontSize: 14,
-                                ),
-                              ),
-                              const SizedBox(width: 4),
-                              Text(
-                                'Vehicle Number: ${booking.VehicleNumber}',
-                                style: const TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 14,
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 15),
+                        ],
+                      ),
+                      const SizedBox(height: 10),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Icon(Icons.directions_car, color: Colors.black),
+                          const SizedBox(width: 10),
                           Text(
-                            'Payment Method: ${booking.paymentMethod}',
+                            'Vehicle: ${booking.VehicleType}',
                             style: const TextStyle(
-                              color: Color.fromARGB(255, 252, 162, 26),
+                              color: Color.fromARGB(255, 255, 153, 0),
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(width: 95),
+                          Icon(Icons.payment, color: Colors.black),
+                          const SizedBox(width: 10),
+                          Text(
+                            'Payment: ${booking.paymentMethod}',
+                            style: const TextStyle(
+                              color: Colors.black,
                               fontSize: 14,
                             ),
                           ),
                         ],
                       ),
-                    ),
+                      const SizedBox(height: 10),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Icon(Icons.confirmation_number, color: Colors.black),
+                          const SizedBox(width: 10),
+                          Text(
+                            'Vehicle Number: ${booking.VehicleNumber}',
+                            style: const TextStyle(
+                              color: Color.fromARGB(255, 255, 145, 0),
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
-                ],
+                ),
               ),
             ),
           );
         },
       ),
-      );
+      bottomNavigationBar: const BottomNavigation(selectedIndex: 2),
+    );
   }
 }

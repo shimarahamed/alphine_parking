@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'login.dart';
 
 class OwnerSignUpScreen extends StatefulWidget {
@@ -12,8 +13,7 @@ class OwnerSignUpScreen extends StatefulWidget {
 class _OwnerSignUpScreenState extends State<OwnerSignUpScreen> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
-  final TextEditingController _idNumberController = TextEditingController();
-  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _nicController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
@@ -45,12 +45,10 @@ class _OwnerSignUpScreenState extends State<OwnerSignUpScreen> {
     try {
       String name = _nameController.text.trim();
       String phone = _phoneController.text.trim();
-      String idNumber = _idNumberController.text.trim();
-      String username = _usernameController.text.trim();
+      String nic = _nicController.text.trim();
       String email = _emailController.text.trim();
       String password = _passwordController.text.trim();
 
-   
       if (phone.isEmpty || !RegExp(r'^\d{9,10}$').hasMatch(phone)) {
         setState(() {
           _showError = true;
@@ -59,8 +57,7 @@ class _OwnerSignUpScreenState extends State<OwnerSignUpScreen> {
         return;
       }
 
-    
-      if (idNumber.isEmpty || !RegExp(r'^[a-zA-Z0-9]{10,12}$').hasMatch(idNumber)) {
+      if (nic.isEmpty || !RegExp(r'^[a-zA-Z0-9]{10,12}$').hasMatch(nic)) {
         setState(() {
           _showError = true;
           _errorMessage = 'NIC number must contain 10 or 12 digits.';
@@ -68,10 +65,7 @@ class _OwnerSignUpScreenState extends State<OwnerSignUpScreen> {
         return;
       }
 
-      if (name.isEmpty ||
-          username.isEmpty ||
-          email.isEmpty ||
-          password.isEmpty) {
+      if (name.isEmpty || email.isEmpty || password.isEmpty) {
         setState(() {
           _showError = true;
           _errorMessage = 'Please fill in all required fields.';
@@ -86,7 +80,9 @@ class _OwnerSignUpScreenState extends State<OwnerSignUpScreen> {
       );
 
       if (userCredential.user != null) {
-    
+        await userCredential.user!.updateDisplayName(name);
+        await _storeUserDetailsInFirestore(userCredential.user!.uid, name, phone, nic, email);
+
         _showRegistrationSuccessDialog();
       } else {
         setState(() {
@@ -102,6 +98,26 @@ class _OwnerSignUpScreenState extends State<OwnerSignUpScreen> {
     }
   }
 
+  Future<void> _storeUserDetailsInFirestore(String uid, String name, String phone, String nic, String email) async {
+    try {
+      FirebaseFirestore firestore = FirebaseFirestore.instance;
+      DocumentReference userRef = firestore.collection('Owners').doc(uid);
+
+      Map<String, dynamic> userData = {
+        'uid': uid,
+        'name': name,
+        'phone': phone,
+        'nic': nic,
+        'email': email,
+        'photoURL': '',
+      };
+
+      await userRef.set(userData);
+    } catch (e) {
+      print('Error storing user details in Firestore: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -114,7 +130,6 @@ class _OwnerSignUpScreenState extends State<OwnerSignUpScreen> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const SizedBox(height: 10.0),
-              
               Container(
                 decoration: BoxDecoration(
                   boxShadow: [
@@ -126,9 +141,7 @@ class _OwnerSignUpScreenState extends State<OwnerSignUpScreen> {
                     ),
                   ],
                 ),
-                
                 child: ClipRRect(
-                  
                   borderRadius: BorderRadius.circular(20),
                   child: Image.asset('assets/logo_name_white.png'),
                 ),
@@ -148,16 +161,10 @@ class _OwnerSignUpScreenState extends State<OwnerSignUpScreen> {
               ),
               const SizedBox(height: 16.0),
               _buildTextField(
-                controller: _idNumberController,
+                controller: _nicController,
                 hintText: "NIC Number",
                 icon: Icons.badge,
                 keyboardType: TextInputType.number,
-              ),
-              const SizedBox(height: 16.0),
-              _buildTextField(
-                controller: _usernameController,
-                hintText: "Username",
-                icon: Icons.person_outline,
               ),
               const SizedBox(height: 16.0),
               _buildTextField(
@@ -185,11 +192,12 @@ class _OwnerSignUpScreenState extends State<OwnerSignUpScreen> {
               ElevatedButton(
                 onPressed: _signUpWithEmailAndPassword,
                 style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(horizontal: 40.0), backgroundColor: Colors.blue,
+                  padding: const EdgeInsets.symmetric(horizontal: 40.0),
+                  backgroundColor: Colors.blue,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8.0),
                   ),
-                  minimumSize: const Size(200, 50), 
+                  minimumSize: const Size(200, 50),
                 ),
                 child: const Text(
                   "Sign Up",
@@ -202,8 +210,7 @@ class _OwnerSignUpScreenState extends State<OwnerSignUpScreen> {
               const SizedBox(height: 5.0),
               TextButton(
                 onPressed: () {
-                 
-                 Navigator.pushReplacementNamed(context, '/login'); 
+                  Navigator.pushReplacementNamed(context, '/login');
                 },
                 child: const Text(
                   "Already have an account? Log in",
